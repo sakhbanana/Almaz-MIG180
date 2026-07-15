@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MIG180 Калькулятор</string>
+    <string name="title">Скорость подачи проволоки</string>
+    <string name="subtitle">Проволока 0.8 мм · сталь · Алмаз MIG180</string>
+    <string name="label_thickness">Толщина металла</string>
+    <string name="label_gas">Чистый CO₂ (выкл — смесь Ar+CO₂)</string>
+    <string name="label_speed">Подача проволоки</string>
+    <string name="label_current">Сварочный ток</string>
+    <string name="label_voltage">Напряжение</string>
+    <string name="label_gas_flow">Расход газа</string>
+    <string name="hint_default">Стыковое соединение без разделки кромок. Держите вылет проволоки 8–12 мм.</string>
+    <string name="hint_thin">Тонкий металл: варите короткими прихватками или с отрывом, чтобы не прожечь. При прожогах уменьшите ток на 10–15%.</string>
+    <string name="hint_thick">Металл от 4 мм: сделайте разделку кромок (фаска ~45°) и варите в 2 прохода. Корневой проход — на 10–15% меньшим током.</string>
+    <string name="disclaimer">Значения ориентировочные — стартовая точка для настройки. Точный режим подбирается пробным швом: ровное «шипение» дуги без треска и хлопков.</string>
+</resources>

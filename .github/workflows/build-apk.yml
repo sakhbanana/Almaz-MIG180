@@ -1,0 +1,44 @@
+name: Build APK
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build release APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Rename APK
+        run: cp app/build/outputs/apk/release/app-release.apk MIG180-WireSpeed.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MIG180-WireSpeed-apk
+          path: MIG180-WireSpeed.apk
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v1.0.${{ github.run_number }}"
+          gh release create "$TAG" MIG180-WireSpeed.apk \
+            --target "${{ github.sha }}" \
+            --title "MIG180 Калькулятор $TAG" \
+            --notes "Калькулятор скорости подачи проволоки 0.8 мм для металла 1–5 мм. Скачайте MIG180-WireSpeed.apk и установите на телефон."
