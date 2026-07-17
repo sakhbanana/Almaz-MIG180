@@ -36,7 +36,7 @@
             android:id="@+id/textThickness"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1.0 мм"
+            android:text="0.8 мм"
             android:textSize="34sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -46,7 +46,7 @@
             android:id="@+id/seekThickness"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="40"
+            android:max="42"
             android:progress="0"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp" />
@@ -60,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="1 мм" />
+                android:text="0.8 мм" />
 
             <TextView
                 android:layout_width="0dp"
@@ -93,28 +93,6 @@
 
             <TextView
                 android:id="@+id/textSpeed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="—"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/label_current"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textCurrent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="—"

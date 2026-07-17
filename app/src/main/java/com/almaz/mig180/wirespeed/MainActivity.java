@@ -11,15 +11,21 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Опорная таблица режимов для проволоки 0.8 мм (сталь), Алмаз MIG180.
-    // толщина мм / ток А / подача м/мин
-    private static final double[] THICKNESS = {1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0};
-    private static final double[] CURRENT   = {45,  65,  90,  105, 120, 140, 160};
-    private static final double[] WIRE_SPEED = {3.0, 4.0, 5.0, 5.8, 6.5, 8.0, 9.5};
+    // Таблица режимов с аппарата Алмаз MIG180, проволока 0.8 мм.
+    // толщина мм / подача м/мин / напряжение В
+    private static final double[] THICKNESS = {0.8, 1.0, 1.2, 1.5, 2.0, 3.0, 4.0, 5.0};
+
+    // Смесь Ar+CO2
+    private static final double[] MIX_SPEED = {2.6, 3.6, 3.4, 4.4, 5.6, 7.5, 8.8, 10.1};
+    private static final double[] MIX_VOLT  = {13.5, 15.0, 15.5, 16.0, 17.0, 18.5, 20.5, 21.5};
+
+    // Чистый CO2
+    private static final double[] CO2_SPEED = {2.0, 2.5, 2.6, 3.4, 4.6, 6.5, 7.7, 8.7};
+    private static final double[] CO2_VOLT  = {13.0, 13.5, 16.5, 17.5, 18.5, 20.0, 22.0, 22.5};
 
     private SeekBar seekThickness;
     private Switch switchGas;
-    private TextView textThickness, textCurrent, textVoltage, textSpeed, textGasFlow, textHint;
+    private TextView textThickness, textVoltage, textSpeed, textGasFlow, textHint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         seekThickness = findViewById(R.id.seekThickness);
         switchGas = findViewById(R.id.switchGas);
         textThickness = findViewById(R.id.textThickness);
-        textCurrent = findViewById(R.id.textCurrent);
         textVoltage = findViewById(R.id.textVoltage);
         textSpeed = findViewById(R.id.textSpeed);
         textGasFlow = findViewById(R.id.textGasFlow);
@@ -54,26 +59,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void recalc() {
-        // SeekBar: 0..40 -> 1.0..5.0 мм с шагом 0.1
-        double thickness = 1.0 + seekThickness.getProgress() / 10.0;
+        // SeekBar: 0..42 -> 0.8..5.0 мм с шагом 0.1
+        double thickness = 0.8 + seekThickness.getProgress() / 10.0;
         boolean co2 = switchGas.isChecked();
 
-        double current = interpolate(THICKNESS, CURRENT, thickness);
-        double speed = interpolate(THICKNESS, WIRE_SPEED, thickness);
-        double voltage = 14.0 + 0.05 * current;
-
-        if (co2) {
-            // В чистом CO2 дуга жёстче: напряжение выше, подачу немного увеличиваем
-            voltage += 1.5;
-            speed *= 1.05;
-        }
-
-        double gasFlow = 8.0 + (thickness - 1.0);
+        double speed = interpolate(THICKNESS, co2 ? CO2_SPEED : MIX_SPEED, thickness);
+        double voltage = interpolate(THICKNESS, co2 ? CO2_VOLT : MIX_VOLT, thickness);
+        double gasFlow = 8.0 + Math.max(0, thickness - 1.0);
 
         textThickness.setText(String.format(Locale.US, "%.1f мм", thickness));
-        textCurrent.setText(String.format(Locale.US, "%.0f А", current));
-        textVoltage.setText(String.format(Locale.US, "%.1f В", voltage));
         textSpeed.setText(String.format(Locale.US, "%.1f м/мин", speed));
+        textVoltage.setText(String.format(Locale.US, "%.1f В", voltage));
         textGasFlow.setText(String.format(Locale.US, "%.0f–%.0f л/мин", gasFlow, gasFlow + 2));
 
         if (thickness >= 4.0) {
