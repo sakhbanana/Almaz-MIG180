@@ -6,6 +6,7 @@
     <string name="label_thickness">Толщина металла</string>
     <string name="label_gas">Чистый CO₂ (выкл — смесь Ar+CO₂)</string>
     <string name="label_speed">Подача проволоки</string>
+    <string name="label_display">Показания дисплея</string>
     <string name="label_voltage">Напряжение</string>
     <string name="label_gas_flow">Расход газа</string>
     <string name="hint_default">Стыковое соединение без разделки кромок. Держите вылет проволоки 8–12 мм.</string>

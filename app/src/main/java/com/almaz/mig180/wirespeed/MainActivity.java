@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SeekBar seekThickness;
     private Switch switchGas;
-    private TextView textThickness, textVoltage, textSpeed, textGasFlow, textHint;
+    private TextView textThickness, textVoltage, textSpeed, textDisplay, textGasFlow, textHint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         textThickness = findViewById(R.id.textThickness);
         textVoltage = findViewById(R.id.textVoltage);
         textSpeed = findViewById(R.id.textSpeed);
+        textDisplay = findViewById(R.id.textDisplay);
         textGasFlow = findViewById(R.id.textGasFlow);
         textHint = findViewById(R.id.textHint);
 
@@ -69,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
         textThickness.setText(String.format(Locale.US, "%.1f мм", thickness));
         textSpeed.setText(String.format(Locale.US, "%.1f м/мин", speed));
+
+        // На дисплее аппарата подача показана как четырёхзначное число:
+        // 2.6 м/мин -> 0260, 5.1 -> 0510
+        long display = Math.round(speed * 10) * 10L;
+        textDisplay.setText(String.format(Locale.US, "%04d", display));
+
         textVoltage.setText(String.format(Locale.US, "%.1f В", voltage));
         textGasFlow.setText(String.format(Locale.US, "%.0f–%.0f л/мин", gasFlow, gasFlow + 2));
 
