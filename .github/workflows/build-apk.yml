@@ -19,26 +19,42 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Build release APK
+      - name: Unit tests (tachometer core)
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon
+          ./gradlew :tacho:testReleaseUnitTest --no-daemon
 
-      - name: Rename APK
-        run: cp app/build/outputs/apk/release/app-release.apk MIG180-WireSpeed.apk
+      - name: Build release APKs
+        run: ./gradlew assembleRelease --no-daemon
 
-      - name: Upload APK artifact
+      - name: Rename APKs
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk MIG180-WireSpeed.apk
+          cp tacho/build/outputs/apk/release/tacho-release.apk MIG180-Tacho.apk
+
+      - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: MIG180-WireSpeed-apk
-          path: MIG180-WireSpeed.apk
+          name: MIG180-apk
+          path: |
+            MIG180-WireSpeed.apk
+            MIG180-Tacho.apk
+
+      - name: Upload test report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tacho-test-report
+          path: tacho/build/reports/tests/
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="v1.0.${{ github.run_number }}"
-          gh release create "$TAG" MIG180-WireSpeed.apk \
+          gh release create "$TAG" MIG180-WireSpeed.apk MIG180-Tacho.apk \
             --target "${{ github.sha }}" \
-            --title "MIG180 Калькулятор $TAG" \
-            --notes "Калькулятор скорости подачи проволоки 0.8 мм для металла 1–5 мм. Скачайте MIG180-WireSpeed.apk и установите на телефон."
+            --title "MIG180 $TAG" \
+            --notes "MIG180-WireSpeed.apk — калькулятор подачи по заводской таблице.
+          MIG180-Tacho.apk — оптический тахометр: измеряет реальную скорость подачи камерой по метке на подающем ролике.
+          Скачайте нужный APK и установите на телефон."
