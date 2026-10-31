@@ -23,9 +23,13 @@ public class MainActivity extends AppCompatActivity {
     private static final double[] CO2_SPEED = {2.0, 2.5, 2.6, 3.4, 4.6, 6.5, 7.7, 8.7};
     private static final double[] CO2_VOLT  = {13.0, 13.5, 16.5, 17.5, 18.5, 20.0, 22.0, 22.5};
 
+    // Сила тока, А. В заводской таблице аппарата её нет — значения ориентировочные,
+    // типовые для проволоки 0.8 мм (зависят от толщины, не от газа).
+    private static final double[] CURRENT = {40, 45, 55, 65, 90, 120, 140, 160};
+
     private SeekBar seekThickness;
     private Switch switchGas;
-    private TextView textThickness, textVoltage, textSpeed, textDisplay, textGasFlow, textHint;
+    private TextView textThickness, textVoltage, textSpeed, textDisplay, textCurrent, textGasFlow, textHint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         textVoltage = findViewById(R.id.textVoltage);
         textSpeed = findViewById(R.id.textSpeed);
         textDisplay = findViewById(R.id.textDisplay);
+        textCurrent = findViewById(R.id.textCurrent);
         textGasFlow = findViewById(R.id.textGasFlow);
         textHint = findViewById(R.id.textHint);
 
@@ -76,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         long display = Math.round(speed * 10) * 10L;
         textDisplay.setText(String.format(Locale.US, "%04d", display));
 
+        textCurrent.setText(String.format(Locale.US, "%.0f А",
+                interpolate(THICKNESS, CURRENT, thickness)));
         textVoltage.setText(String.format(Locale.US, "%.1f В", voltage));
         textGasFlow.setText(String.format(Locale.US, "%.0f–%.0f л/мин", gasFlow, gasFlow + 2));
 
